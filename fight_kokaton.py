@@ -167,15 +167,6 @@ def main():
 
         #衝突判定
         #鳥と爆弾の衝突
-        if bomb is not None:
-            if bird.rct.colliderect(bomb.rct):
-                # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
-                bird.change_img(8, screen)                
-                screen.blit(txt, [WIDTH//2-150, HEIGHT//2])
-
-                pg.display.update()                
-                time.sleep(1)
-                return
         if bombs != []:
             for bomb in bombs:
                 if bird.rct.colliderect(bomb.rct):
