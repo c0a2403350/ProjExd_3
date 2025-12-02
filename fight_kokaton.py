@@ -174,7 +174,7 @@ def main():
     # bomb = Bomb((255, 0, 0), 10)
     #複数の爆弾を格納する
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
-    beam = None  # ゲーム初期化時にはビームは存在しない
+    beams = []  # ゲーム初期化時にはビームは存在しない
     fonto = pg.font.Font(None, 80)
     txt = fonto.render("Game Over", True, (255, 0, 0))
     clock = pg.time.Clock()
@@ -187,7 +187,7 @@ def main():
                 return
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
                 # スペースキー押下でBeamクラスのインスタンス生成
-                beam = Beam(bird)            
+                beam = beams.append(Beam(bird))            
         screen.blit(bg_img, [0, 0])
 
         #衝突判定
@@ -203,28 +203,31 @@ def main():
                     time.sleep(1)
                     return
         #爆弾とビームの衝突
-        for num, bomb in enumerate(bombs):
-            if bomb is not None and beam is not None:
-                if beam.rct.colliderect(bomb.rct):
-                    beam = None
-                    bombs[num] = None
-                    #スコア処理
-                    score.score += 1
-                            
-                    bird.change_img(6, screen)
-            key_lst = pg.key.get_pressed()
+        for i, bomb in enumerate(bombs):
+            for j, beam in enumerate(beams):
+                if beam is not None and bomb is not None:
+                    if beam.rct.colliderect(bomb.rct):
+                        beams[j] = None
+                        bombs[i] = None
+                        #スコア処理
+                        score.score += 1
+                                
+                        bird.change_img(6, screen)
         
         bombs = [bomb for bomb in bombs if bomb is not None]
+        beams = [beam for beam in beams if beam is not None]
 
+        key_lst = pg.key.get_pressed()
         #オブジェクトイベント
         bird.update(key_lst, screen)
-        if beam is not None:
-            beam.update(screen)
-        if bomb != []:
+        
+        if beams != []:
+            for beam in beams:
+                beam.update(screen)
+        if bombs != []:
             for bomb in bombs:
                 bomb.update(screen)
         score.update(screen)
-        
         
         pg.display.update()
         tmr += 1
