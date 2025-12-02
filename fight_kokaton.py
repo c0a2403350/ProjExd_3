@@ -104,7 +104,7 @@ class Beam:
         ビームを速度ベクトルself.vx, self.vyに基づき移動させる
         引数 screen：画面Surface
         """
-        if check_bound(self.rct) == (True, True):
+        if check_bound(self.rct) == (True, True): 
             self.rct.move_ip(self.vx, self.vy)
             screen.blit(self.img, self.rct)    
 
@@ -172,10 +172,11 @@ def main():
         if bomb is not None and beam is not None:
             if beam.rct.colliderect(bomb.rct):
                 beam = None
-                bomb = None
-        bird.update(key_lst, screen)
-        
+                bomb = None        
         key_lst = pg.key.get_pressed()
+
+        #オブジェクトイベント
+        bird.update(key_lst, screen)
         if beam is not None:
             beam.update(screen)
         if bomb is not None:
