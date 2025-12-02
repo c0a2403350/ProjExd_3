@@ -109,7 +109,7 @@ class Score:
 
     def update(self, screen: pg.Surface):
         """
-        ビームを速度ベクトルself.vx, self.vyに基づき移動させる
+        クラス変数のスコアに応じて表示内容を変える
         引数 screen：画面Surface
         """
         self.img = self.fonto.render(f"スコア:{self.score}", 0, self.clr)
@@ -180,7 +180,7 @@ class Bomb:
 
 class Explosion:
     """
-    爆発に関するクラス
+    爆弾とビーム衝突時に発生する爆発に関するクラス
     """
     def __init__(self, bomb: "Bomb"):
         """
