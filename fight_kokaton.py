@@ -84,6 +84,30 @@ class Bird:
             self.img = __class__.imgs[tuple(sum_mv)]
         screen.blit(self.img, self.rct)
 
+class Score:
+    """
+    スコア計算関するクラス
+    """
+    def __init__(self):
+        """
+        テキストのSurfaceを生成する
+        """
+        self.score = 0
+        
+        self.fonto = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30) #フォント
+        self.clr = (0,0,255) #色
+        
+        self.img = self.fonto.render(f"スコア:{self.score}", 0, self.clr)        
+        self.rct = self.img.get_rect()
+        self.rct.center = 100, HEIGHT - 50
+
+    def update(self, screen: pg.Surface):
+        """
+        ビームを速度ベクトルself.vx, self.vyに基づき移動させる
+        引数 screen：画面Surface
+        """
+        self.img = self.fonto.render(f"スコア:{self.score}", 0, self.clr)
+        screen.blit(self.img, self.rct)
 
 class Beam:
     """
@@ -146,6 +170,7 @@ def main():
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
     bg_img = pg.image.load("fig/pg_bg.jpg")
     bird = Bird((300, 200))
+    score = Score()
     # bomb = Bomb((255, 0, 0), 10)
     #複数の爆弾を格納する
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
@@ -183,6 +208,8 @@ def main():
                 if beam.rct.colliderect(bomb.rct):
                     beam = None
                     bombs[num] = None
+                    #スコア処理
+                    score.score += 1
                             
                     bird.change_img(6, screen)
             key_lst = pg.key.get_pressed()
@@ -196,6 +223,9 @@ def main():
         if bomb != []:
             for bomb in bombs:
                 bomb.update(screen)
+        score.update(screen)
+        
+        
         pg.display.update()
         tmr += 1
         clock.tick(50)
