@@ -164,6 +164,38 @@ class Bomb:
         self.rct.move_ip(self.vx, self.vy)
         screen.blit(self.img, self.rct)
 
+class Explosion:
+    """
+    爆発に関するクラス
+    """
+    def __init__(self, bomb: "Bomb"):
+        """
+        引数：Bombインスタンス
+        Surface・パラメータ設定
+        """
+        original = pg.image.load(r".\fig\explosion.gif")
+        rev_original = pg.transform.flip(original, True, True)
+        self.imgs = [
+            original,
+            rev_original
+        ]
+        
+        self.rct = bomb.rct.center
+        self.life = 30
+
+    def update(self, screen: pg.Surface):
+        """
+        爆発を発生させる
+        引数 screen：画面Surface
+        """
+        self.life -= 1
+        display_set = 10
+        
+        if self.life > 1:
+            if self.life % display_set >= display_set//2:
+                screen.blit(self.imgs[0], self.rct)
+            elif self.life % display_set < display_set//2:
+                screen.blit(self.imgs[1], self.rct) 
 
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
@@ -175,6 +207,7 @@ def main():
     #複数の爆弾を格納する
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
     beams = []  # ゲーム初期化時にはビームは存在しない
+    explosions = [] #爆発用
     fonto = pg.font.Font(None, 80)
     txt = fonto.render("Game Over", True, (255, 0, 0))
     clock = pg.time.Clock()
@@ -211,6 +244,9 @@ def main():
                         bombs[i] = None
                         #スコア処理
                         score.score += 1
+
+                        #爆発演出の予約
+                        explosions.append(Explosion(bomb))                            
                                 
                         bird.change_img(6, screen)
         
@@ -228,6 +264,9 @@ def main():
             for bomb in bombs:
                 bomb.update(screen)
         score.update(screen)
+        if explosions != []:
+            for explosion in explosions:
+                explosion.update(screen)
         
         pg.display.update()
         tmr += 1
