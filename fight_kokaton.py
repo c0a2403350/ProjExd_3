@@ -172,7 +172,8 @@ def main():
         if bomb is not None and beam is not None:
             if beam.rct.colliderect(bomb.rct):
                 beam = None
-                bomb = None        
+                bomb = None
+                        
         key_lst = pg.key.get_pressed()
 
         #オブジェクトイベント
