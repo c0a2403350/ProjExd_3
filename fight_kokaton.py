@@ -207,10 +207,7 @@ def main():
     #複数の爆弾を格納する
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
     beams = []  # ゲーム初期化時にはビームは存在しない
-<<<<<<< HEAD
-=======
     explosions = [] #爆発用
->>>>>>> explosion
     fonto = pg.font.Font(None, 80)
     txt = fonto.render("Game Over", True, (255, 0, 0))
     clock = pg.time.Clock()
@@ -247,12 +244,9 @@ def main():
                         bombs[i] = None
                         #スコア処理
                         score.score += 1
-<<<<<<< HEAD
-=======
 
                         #爆発演出の予約
                         explosions.append(Explosion(bomb))                            
->>>>>>> explosion
                                 
                         bird.change_img(6, screen)
         
@@ -270,12 +264,9 @@ def main():
             for bomb in bombs:
                 bomb.update(screen)
         score.update(screen)
-<<<<<<< HEAD
-=======
         if explosions != []:
             for explosion in explosions:
                 explosion.update(screen)
->>>>>>> explosion
         
         pg.display.update()
         tmr += 1
