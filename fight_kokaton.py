@@ -3,7 +3,7 @@ import random
 import sys
 import time
 import pygame as pg
-
+import math
 
 WIDTH = 1100  # ゲームウィンドウの幅
 HEIGHT = 650  # ゲームウィンドウの高さ
@@ -54,6 +54,9 @@ class Bird:
         引数 xy：こうかとん画像の初期位置座標タプル
         """
         self.img = __class__.imgs[(+5, 0)]
+
+        self.dire = (+5, 0)
+
         self.rct: pg.Rect = self.img.get_rect()
         self.rct.center = xy
 
@@ -82,6 +85,9 @@ class Bird:
             self.rct.move_ip(-sum_mv[0], -sum_mv[1])
         if not (sum_mv[0] == 0 and sum_mv[1] == 0):
             self.img = __class__.imgs[tuple(sum_mv)]
+            
+        if sum_mv != [0,0]:
+            self.dire = sum_mv
         screen.blit(self.img, self.rct)
 
 class Score:
@@ -122,7 +128,15 @@ class Beam:
         self.rct = self.img.get_rect()
         self.rct.centery = bird.rct.centery
         self.rct.left = bird.rct.right
-        self.vx, self.vy = +5, 0
+        self.vx, self.vy = bird.dire
+
+        rslt = math.atan2(self.vy, self.vx)
+        deg_rslt = -math.degrees(rslt)
+        self.img = pg.transform.rotozoom(self.img, deg_rslt, 1.0)
+
+        x = bird.rct.centerx + bird.rct.width * self.vx / 5
+        y = bird.rct.centery + bird.rct.height * self.vy / 5
+        self.rct.center = (x, y)
 
     def update(self, screen: pg.Surface):
         """
